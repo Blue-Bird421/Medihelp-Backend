@@ -8,9 +8,8 @@ async function getNearbyResponders(location, radius = 5000) {
         $geometry: { type: 'Point', coordinates: [location.lng, location.lat] },
         $maxDistance: radius,
       },
-    },
-    status: 'available', // Only include available responders
-  }).select('name phone certification location status'); // Include all relevant fields
+    }
+  });
 }
 
 module.exports = { getNearbyResponders };

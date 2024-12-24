@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
     sendNotification(
       responders.map((r) => r.phone), // Assuming `phone` is used for notifications
       'New Distress Call',
-      { distressType, location }
+      { location }
     );
 
     // Return distress call info with responders' details

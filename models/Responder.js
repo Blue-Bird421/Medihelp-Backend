@@ -8,7 +8,7 @@ const responderSchema = new mongoose.Schema({
     type: { type: String, enum: ['Point'], required: true },
     coordinates: { type: [Number], required: true },
   },
-  status: { type: String, enum: ['available', 'active'], default: 'available' },
+  token : String,
 });
 
 responderSchema.index({ location: '2dsphere' }); // Geospatial index
