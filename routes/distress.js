@@ -7,33 +7,30 @@ const router = express.Router();
 // Create a distress call
 router.post('/', async (req, res) => {
   try {
-    const { user, location, distressType } = req.body;
-
-    // Fetch nearby responders with full details
-    const responders = await getNearbyResponders(location);
-
     // Create a distress call in the database
-    const distressCall = new DistressCall({
-      user,
-      location,
-      distressType,
-      responders: responders.map((responder) => responder._id), // Save responder IDs
-    });
-
-    await distressCall.save();
-
+    const distressCall = new DistressCall({...req.body});
+    
+    const savedDistressCall = await distressCall.save();
+    
+    // Fetch nearby responders with full details
+    const responders = await getNearbyResponders(savedDistressCall.location);
+    
+    // Calculate distances
+    const responderTokens = responders.map((r) => r.token);
+    const distances = responders.map((r) => calculateDistance(savedDistressCall.location, r.location));
+    
     // Notify responders
     sendNotification(
-      responders.map((r) => r.phone), // Assuming `phone` is used for notifications
+      responderTokens,
       'New Distress Call',
-      { location }
+      distances
     );
 
     // Return distress call info with responders' details
     res.status(201).json({
       message: 'Distress call created successfully',
       distressCall,
-      responders,
+      responders: responders.map((r, index) => ({ ...r, distance: distances[index] })),
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

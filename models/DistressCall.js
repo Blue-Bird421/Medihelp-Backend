@@ -18,13 +18,11 @@ const distressCallSchema = new mongoose.Schema({
         medicalHistory: String,
       }
     },
-    distressData: {
-      location: { 
-        type: { type: String, enum: ['Point'], required: true },
-        coordinates: { type: [Number], required: true } 
-      },
-      distressType: String,
-    }
+    location: { 
+      type: { type: String, enum: ['Point'], required: true },
+      coordinates: { type: [Number], required: true } 
+    },
+    distressType: String
 });
 
 module.exports = mongoose.model('DistressCall', distressCallSchema);
